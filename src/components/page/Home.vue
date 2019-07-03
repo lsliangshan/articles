@@ -32,7 +32,7 @@
 <style scoped>
 </style>
 <script>
-  import { f7Statusbar, f7View, f7Page, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem } from 'framework7-vue'
+  import { f7Statusbar, f7View, f7Page, f7PageContent, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem } from 'framework7-vue'
   import ArticleList from '../parts/article/List.vue'
   import ArticleItem from '../parts/article/Item.vue'
   export default {
@@ -40,7 +40,7 @@
     components: {
       ArticleList,
       ArticleItem,
-      f7Statusbar, f7View, f7Page, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem
+      f7Statusbar, f7View, f7Page, f7PageContent, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem
     },
     data () {
       return {
@@ -50,6 +50,10 @@
       }
     },
     mounted () {
+      this.$f7ready((f7) => {
+        console.log('f7: ', f7)
+        console.log('$f7: ', this.$f7)
+      })
     },
     methods: {
       loadMore () {

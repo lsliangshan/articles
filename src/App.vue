@@ -4,12 +4,12 @@
     <router-view /> -->
     <f7-app :params="f7params">
       <f7-statusbar></f7-statusbar>
-      <f7-view main
+      <f7-view :main="true"
                url="/"
+               class="safe-areas"
                :push-state="true"
                push-state-separator=""
                push-state-root=""
-               class="safe-areas"
                :master-detail-breakpoint="800"></f7-view>
     </f7-app>
   </div>
@@ -17,11 +17,11 @@
 
 <script>
   import routes from './routers'
-  import { f7App, f7Statusbar, f7Views, f7View, f7Page, f7Toolbar, f7Navbar, f7Tabs, f7Tab, f7Link, f7Block } from 'framework7-vue'
+  import { f7App, f7Statusbar, f7Views, f7View, f7Toolbar, f7Navbar, f7Tabs, f7Tab, f7Link, f7Block } from 'framework7-vue'
   export default {
     name: 'App',
     components: {
-      f7App, f7Statusbar, f7Views, f7View, f7Page, f7Toolbar, f7Navbar, f7Tabs, f7Tab, f7Link, f7Block
+      f7App, f7Statusbar, f7Views, f7View, f7Toolbar, f7Navbar, f7Tabs, f7Tab, f7Link, f7Block
     },
     data () {
       let theme = 'auto'
@@ -61,10 +61,10 @@
 <style>
   #app {
     /* font-family: "Avenir", Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
-        margin-top: 60px; */
+                  -webkit-font-smoothing: antialiased;
+                  -moz-osx-font-smoothing: grayscale;
+                  text-align: center;
+                  color: #2c3e50;
+                  margin-top: 60px; */
   }
 </style>
