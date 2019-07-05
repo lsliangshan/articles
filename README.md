@@ -1,30 +1,76 @@
-# articles
+# Articles
 
-> A Vue.js project
+## Framework7 CLI Options
 
-## Build Setup
+Framework7 app created with following options:
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+```
+{
+  "cwd": "/Keith/git/ls/com.dei2/articles",
+  "type": [
+    "pwa"
+  ],
+  "name": "Articles",
+  "framework": "vue",
+  "template": "split-view",
+  "bundler": "webpack",
+  "cssPreProcessor": "scss",
+  "theming": {
+    "customColor": true,
+    "color": "#0a510f",
+    "darkTheme": true,
+    "iconFonts": true,
+    "fillBars": false
+  },
+  "customBuild": false,
+  "webpack": {
+    "developmentSourceMap": true,
+    "productionSourceMap": true,
+    "hashAssets": false,
+    "preserveAssetsPaths": false,
+    "inlineAssets": true
+  }
+}
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## NPM Scripts
+
+* `npm start` - run development server
+* `npm run build-prod` - build web app for production
+* `npm run build-dev` - build web app using development mode (faster build without minification and optimization)
+
+## WebPack
+
+There is a webpack bundler setup. It compiles and bundles all "front-end" resources. You should work only with files located in `/src` folder. Webpack config located in `build/webpack.config.js`.
+
+Webpack has specific way of handling static assets (CSS files, images, audios). You can learn more about correct way of doing things on [official webpack documentation](https://webpack.js.org/guides/asset-management/).
+
+## PWA
+
+This is a PWA. Don't forget to check what is inside of your `service-worker.js`. It is also recommended that you disable service worker (or enable "Update on reload") in browser dev tools during development.
+## Assets
+
+Assets (icons, splash screens) source images located in `assets-src` folder. To generate your own icons and splash screen images, you will need to replace all assets in this directory with your own images (pay attention to image size and format), and run the following command in the project directory:
+
+```
+framework7 generate-assets
+```
+
+Or launch UI where you will be able to change icons and splash screens:
+
+```
+framework7 generate-assets --ui
+```
+
+## Documentation & Resources
+
+* [Framework7 Core Documentation](https://framework7.io/docs/)
+* [Framework7 Vue Documentation](https://framework7.io/vue/)
+
+* [Framework7 Icons Reference](https://framework7.io/icons/)
+* [Community Forum](https://forum.framework7.io)
+
+## Support Framework7
+
+Love Framework7? Support project by donating or pledging on patreon:
+https://patreon.com/vladimirkharlampidi
