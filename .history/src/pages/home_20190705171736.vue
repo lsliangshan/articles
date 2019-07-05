@@ -89,7 +89,7 @@
   export default {
     methods: {
       loadMore () {
-        console.log('load more')
+        alert('load more')
       }
     }
   }
