@@ -57,7 +57,7 @@
     },
     methods: {
       loadMore () {
-        alert('1')
+        console.log('1')
         if (!this.allowInfinite) return
         this.allowInfinite = false
 
