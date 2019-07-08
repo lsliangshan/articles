@@ -16,11 +16,17 @@ import 'framework7-icons'
 
 import store from './store'
 
+import * as filters from './filters'
+
 import './assets/css/animate.css/animate.min.css'
 
 Framework7.use(Framework7Vue)
 
 require('./directives/index')
+
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.config.productionTip = false
 

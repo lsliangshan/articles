@@ -41,5 +41,8 @@ export const mutations = {
     state.popup = Object.assign({}, state.popup, data, {
       shown: true
     })
+  },
+  [types.CACHE_ALL_ARTICLE_TAGS] (state, data) {
+    state.allArticleTags = data.tags
   }
 }

@@ -37,6 +37,8 @@
 // >>>> mutations:
 export const SHOW_POPUP = 'SHOW_POPUP'
 
+export const CACHE_ALL_ARTICLE_TAGS = 'CACHE_ALL_ARTICLE_TAGS'
+
 // actions
 
 export const AJAX = 'AJAX'

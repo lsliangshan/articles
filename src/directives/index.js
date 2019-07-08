@@ -42,11 +42,14 @@ Vue.directive('md', {
     let _val = binding.value ? binding.value : ''
     if (_len > 0) {
       if (binding.value && binding.value.length > _len) {
-        _val = binding.value.replace(binding.value.substring(_len), '...')
+        _val = binding.value.replace(/(\<.*\>)/g, '').replace(/(\<.*\/\>)/g, '').replace(/#/g, '').replace(/[\r\n]/g, '').replace(/\s/g, '')
+        _val = _val.replace(_val.substring(_len), '...')
       }
+      el.innerText = _val
+    } else {
+      el.innerHTML = marked(_val, {
+        smartLists: true
+      })
     }
-    el.innerHTML = marked(_val, {
-      smartLists: true
-    })
   }
 })

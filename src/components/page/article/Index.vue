@@ -37,112 +37,112 @@
   </f7-page>
 </template>
 <style scoped>
-.top_img {
-  width: 100%;
-}
-.card_title {
-  display: -webkit-box;
-  word-break: break-all;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-.oxh {
-  overflow-x: hidden;
-}
+  .top_img {
+    width: 100%;
+  }
+  .card_title {
+    display: -webkit-box;
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .oxh {
+    overflow-x: hidden;
+  }
 </style>
 
 <script>
-import { f7Page, f7Card, f7CardContent, f7CardHeader, f7Link } from 'framework7-vue'
-import ArticleItem from '../../parts/article/Item.vue'
-import * as types from '../../../store/mutation-types'
-export default {
-  name: 'ArticleDetail',
-  components: {
-    f7Page, f7Card, f7CardContent, f7CardHeader, f7Link,
-    ArticleItem
-  },
-  props: {},
-  data () {
-    return {
-      detail: null,
-      topImage: 'https://static.dei2.com/live/images/article.jpeg',
-      opened: false,
-      imageHeight: 250
-    }
-  },
-  computed: {
-    store () {
-      return this.$store
+  import { f7Page, f7Card, f7CardContent, f7CardHeader, f7Link } from 'framework7-vue'
+  import ArticleItem from '../../parts/article/Item.vue'
+  import * as types from '../../../store/mutation-types'
+  export default {
+    name: 'ArticleDetail',
+    components: {
+      f7Page, f7Card, f7CardContent, f7CardHeader, f7Link,
+      ArticleItem
     },
-    requestInfo () {
-      return this.store.state.requestInfo
-    },
-    classes () {
-      return [
-        {
-          [`skeleton-block skeleton-text`]: this.loading
-        }
-      ]
-    }
-  },
-  async mounted () {
-    if (this.$f7route.params.articleId) {
-      let openedDetail = await this.getArticleDetail({
-        articleId: this.$f7route.params.articleId
-      })
-      this.detail = openedDetail || null
-    }
-  },
-  methods: {
-    getArticleDetail (args) {
-      return new Promise(async (resolve, reject) => {
-        await this.store.dispatch(types.AJAX, {
-          url: this.requestInfo.articles.detail,
-          data: {
-            uuid: args.articleId
-          }
-        }).then(responseData => {
-          if (responseData.status === 200 && responseData.data) {
-            resolve(responseData.data)
-          } else {
-            resolve(null)
-          }
-        }).catch(err => {
-          resolve(null)
-        })
-      })
-    },
-    openDetail (e) {
-      this.opened = true
-    },
-    closeDetail (e) {
-      this.$f7router.navigate('/')
-    }
-  },
-  watch: {
-    'detail.album': {
-      immediate: true,
-      handler (val) {
-        if (val) {
-          let image = new Image()
-          image.onload = () => {
-            this.imageHeight = Math.floor(document.documentElement.offsetWidth * image.height / image.width)
-          }
-          image.src = val
-        } else {
-          this.imageHeight = Math.floor(document.documentElement.offsetWidth * 250 / 375)
-        }
+    props: {},
+    data () {
+      return {
+        detail: null,
+        topImage: 'https://static.dei2.com/live/images/article.jpeg',
+        opened: false,
+        imageHeight: 250
       }
     },
-    'detail.title': {
-      immediate: true,
-      handler (val) {
-        document.title = val || '文章详情'
+    computed: {
+      store () {
+        return this.$store
+      },
+      requestInfo () {
+        return this.store.state.requestInfo
+      },
+      classes () {
+        return [
+          {
+            [`skeleton-block skeleton-text`]: this.loading
+          }
+        ]
+      }
+    },
+    async mounted () {
+      if (this.$f7route.params.articleId) {
+        let openedDetail = await this.getArticleDetail({
+          articleId: this.$f7route.params.articleId
+        })
+        this.detail = openedDetail || null
+      }
+    },
+    methods: {
+      getArticleDetail (args) {
+        return new Promise(async (resolve, reject) => {
+          await this.store.dispatch(types.AJAX, {
+            url: this.requestInfo.articles.detail,
+            data: {
+              uuid: args.articleId
+            }
+          }).then(responseData => {
+            if (responseData.status === 200 && responseData.data) {
+              resolve(responseData.data)
+            } else {
+              resolve(null)
+            }
+          }).catch(err => {
+            resolve(null)
+          })
+        })
+      },
+      openDetail (e) {
+        this.opened = true
+      },
+      closeDetail (e) {
+        this.$f7router.navigate('/')
+      }
+    },
+    watch: {
+      'detail.album': {
+        immediate: true,
+        handler (val) {
+          if (val) {
+            let image = new Image()
+            image.onload = () => {
+              this.imageHeight = Math.floor(document.documentElement.offsetWidth * image.height / image.width)
+            }
+            image.src = val
+          } else {
+            this.imageHeight = Math.floor(document.documentElement.offsetWidth * 250 / 375)
+          }
+        }
+      },
+      'detail.title': {
+        immediate: true,
+        handler (val) {
+          document.title = val || '文章详情'
+        }
       }
     }
   }
-}
 </script>

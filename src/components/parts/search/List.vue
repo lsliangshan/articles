@@ -53,26 +53,25 @@
   </transition>
 </template>
 <style scoped>
-.search_list {
-  width: 100%;
-  /* height: calc(100% - var(--f7-navbar-height));
-  padding-top: var(--f7-navbar-height); */
-  /* overflow-y: auto; */
-  z-index: 101;
-}
+  .search_list {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 101;
+  }
 </style>
 <script>
-import { f7Page, f7List, f7ListItem } from 'framework7-vue'
-export default {
-  name: 'SearchList',
-  components: {
-    f7Page, f7List, f7ListItem
-  },
-  props: {
-    kw: {
-      type: String,
-      default: ''
+  import { f7Page, f7List, f7ListItem } from 'framework7-vue'
+  export default {
+    name: 'SearchList',
+    components: {
+      f7Page, f7List, f7ListItem
+    },
+    props: {
+      kw: {
+        type: String,
+        default: ''
+      }
     }
   }
-}
 </script>

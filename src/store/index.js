@@ -74,7 +74,8 @@ const store = new Vuex.Store({
       }
     },
     loginInfo: {
-    }
+    },
+    allArticleTags: []
   }
 })
 
