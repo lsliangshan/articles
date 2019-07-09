@@ -1,6 +1,7 @@
 <template>
   <f7-page name="home"
            class="home-page"
+           hide-bars-on-scroll
            infinite
            :infinite-distance="0"
            :infinite-preloader="showPreloader"
@@ -15,7 +16,8 @@
                  :icon-size="24"
                  icon-ios="f7:person_round"
                  icon-aurora="f7:person_round"
-                 icon-md="f7:person_round"></f7-link>
+                 icon-md="f7:person_round"
+                 panel-open="left"></f7-link>
       </f7-nav-left>
       <f7-nav-title>INIG</f7-nav-title>
       <!-- <f7-nav-title-large>INIG - 智愚</f7-nav-title-large> -->
@@ -45,6 +47,30 @@
                   :detail="item">
     </article-item>
     <!-- </f7-page-content> -->
+
+    <transition name="fab-button-transition"
+                enter-active-class="animated fadeInUpBig faster"
+                leave-active-class="animated fadeOut faster">
+      <f7-fab position="right-bottom"
+              style="position: fixed;"
+              color="orange"
+              v-if="fabButtonShown">
+        <f7-link icon-only
+                 :icon-size="24"
+                 icon-ios="f7:person"
+                 icon-aurora="f7:person"
+                 icon-md="f7:person"
+                 color="white"
+                 panel-open="left"></f7-link>
+        <!-- <f7-icon ios="f7:close"
+                 aurora="f7:close"
+                 md="md:close"></f7-icon> -->
+        <!-- <f7-fab-buttons position="top">
+          <f7-fab-button label="Action 1">1</f7-fab-button>
+          <f7-fab-button label="Action 2">2</f7-fab-button>
+        </f7-fab-buttons> -->
+      </f7-fab>
+    </transition>
   </f7-page>
 
 </template>
@@ -54,7 +80,7 @@
   }
 </style>
 <script>
-  import { f7Statusbar, f7View, f7Page, f7PageContent, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem, f7Searchbar } from 'framework7-vue'
+  import { f7Statusbar, f7View, f7Page, f7PageContent, f7Fab, f7Icon, f7FabButtons, f7Button, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem, f7Searchbar } from 'framework7-vue'
   import ArticleItem from '../parts/article/Item.vue'
   import SearchList from '../parts/search/List.vue'
   import * as types from '../../store/mutation-types'
@@ -63,7 +89,7 @@
     components: {
       ArticleItem,
       SearchList,
-      f7Statusbar, f7View, f7Page, f7PageContent, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem, f7Searchbar
+      f7Statusbar, f7View, f7Page, f7PageContent, f7Fab, f7Icon, f7FabButtons, f7Button, f7Navbar, f7NavRight, f7Toolbar, f7Tabs, f7Tab, f7Link, f7Block, f7List, f7ListItem, f7Searchbar
     },
     data () {
       return {
@@ -75,7 +101,8 @@
         defaultArticleDetail: null,
         isOpen: false,
         isSearching: false,
-        kw: ''
+        kw: '',
+        fabButtonShown: false
       }
     },
     computed: {
@@ -102,6 +129,12 @@
       //   alert('submit')
       // })
       this.getAllArticleTags()
+
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.fabButtonShown = true
+        }, 800)
+      })
     },
     methods: {
       scrollToTop () {
@@ -219,7 +252,6 @@
       },
       doSearch (searchbar, query) {
         this.kw = query
-        console.log('....', query)
       },
       searchEnable () {
         this.isSearching = true

@@ -5,76 +5,81 @@
     <transition name="article-transition"
                 enter-active-class="animated fadeIn"
                 leave-active-class="animated fadeOut faster">
-      <f7-card expandable
-               v-if="!loading"
-               :padding="false"
-               :expandable-opened="isOpen"
-               @card:open="openDetail"
-               @card:close="closeDetail"
-               style="width: 100%; height: 100%; margin: 0;">
-        <f7-card-content :padding="false">
-          <div class="bg-color-white"
-               :class="classes"
-               :style="{height: imageHeight + 'px'}"
-               v-if="opened">
-            <img class="top_img"
-                 style="position: absolute"
-                 :src="detail.album || topImage"
+      <keep-alive>
+        <f7-card expandable
+                 no-shadow
+                 hide-navbar-on-open
+                 v-if="!loading"
+                 :padding="false"
+                 :expandable-opened="isOpen"
+                 @card:open="openDetail"
+                 @card:close="closeDetail"
+                 style="width: 100%; height: 100%; margin: 0;">
+          <f7-card-content :padding="false">
+            <div class="bg-color-white"
+                 :class="classes"
+                 :style="{height: imageHeight + 'px'}"
                  v-if="opened">
-            <f7-card-header text-color="black"
-                            class="display-block"
-                            :style="{paddingTop: opened ? '58px' : '20px'}">
-              <span class="card_title"
-                    :style="{width: opened ? '100%' : 'calc(100% - 40px)'}">{{detail.title}}</span>
-              <small :style="{opacity: 0.7}">{{detail.zpm_user ? (detail.zpm_user.nickname || detail.zpm_user.username) : '无名'}}</small>
-            </f7-card-header>
-            <f7-link card-close
-                     color="black"
-                     class="card-opened-fade-in"
-                     :style="{position: 'absolute', right: '15px', top: '15px'}"
-                     icon-f7="close_round_fill"></f7-link>
-          </div>
-          <div class="bg-color-white"
-               :class="classes"
-               :style="{height: imageHeight + 'px'}"
-               v-else>
-            <f7-card-header text-color="black"
-                            class="custom_card_header"
-                            style="width: calc(100% - 40px);">
-              <div class="avatar">
-                <img class="avatar_img"
-                     :src="detail.zpm_user.headIcon || defaultAvatar"
-                     alt="">
-              </div>
-              <div class="user_info">
-                <div class="user_name">{{detail.zpm_user.nickname || detail.zpm_user.username.replace(/(\d{3})(\d{4})/, '$1****')}}</div>
-                <div class="publish_time">{{detail.postTime | dateFormat}}</div>
-              </div>
-            </f7-card-header>
-            <div class="custom_card_content">
-              <div class="custom_card_content_title">{{detail.title}}</div>
-              <div class="custom_card_content_subtitle"
-                   v-md:40="detail.content"></div>
+              <img class="top_img"
+                   style="position: absolute"
+                   :src="detail.album || topImage"
+                   v-if="opened">
+              <f7-card-header text-color="black"
+                              class="display-block"
+                              :style="{paddingTop: opened ? '58px' : '20px'}">
+                <span class="card_title"
+                      :style="{width: opened ? '100%' : 'calc(100% - 40px)'}">{{detail.title}}</span>
+                <small :style="{opacity: 0.7}">{{detail.zpm_user ? (detail.zpm_user.nickname || detail.zpm_user.username) : '无名'}}</small>
+              </f7-card-header>
+              <f7-link card-close
+                       color="black"
+                       class="card-opened-fade-in"
+                       :style="{position: 'absolute', right: '15px', top: '15px'}"
+                       icon-f7="close_round_fill"></f7-link>
             </div>
-            <f7-card-footer class="no-border custom_card_footer">
-              <div class="tag_container">
-                <f7-chip v-for="(tag, index) in detail.tag.split(';')"
-                         :key="index"
-                         :text="tag | findTextByValue(allArticleTags)"
-                         color="primary"
-                         outline
-                         style="height: 26px; margin-right: 4px;"></f7-chip>
+            <div class="bg-color-white"
+                 :class="classes"
+                 :style="{height: imageHeight + 'px'}"
+                 v-else>
+              <f7-card-header text-color="black"
+                              class="custom_card_header"
+                              style="width: calc(100% - 40px);"
+                              @click.prevent.self="goToUserProfile">
+                <div class="avatar">
+                  <img class="avatar_img"
+                       :src="detail.zpm_user.headIcon || defaultAvatar"
+                       alt="">
+                </div>
+                <div class="user_info">
+                  <div class="user_name">{{detail.zpm_user.nickname || detail.zpm_user.username.replace(/(\d{3})(\d{4})/, '$1****')}}</div>
+                  <div class="publish_time">{{detail.postTime | dateFormat}}</div>
+                </div>
+              </f7-card-header>
+              <div class="custom_card_content">
+                <div class="custom_card_content_title">{{detail.title}}</div>
+                <div class="custom_card_content_subtitle"
+                     v-md:40="detail.content"></div>
               </div>
-              <f7-link style="font-size: 13px;">查看全文</f7-link>
-            </f7-card-footer>
-          </div>
-          <div class="card-content-padding oxh"
-               v-md="detail.content"
-               v-if="opened">
+              <f7-card-footer class="no-border custom_card_footer">
+                <div class="tag_container">
+                  <f7-chip v-for="(tag, index) in detail.tag.split(';')"
+                           :key="index"
+                           :text="tag | findTextByValue(allArticleTags)"
+                           color="primary"
+                           outline
+                           style="height: 26px; margin-right: 4px;"></f7-chip>
+                </div>
+                <f7-link style="font-size: 13px;">查看全文</f7-link>
+              </f7-card-footer>
+            </div>
+            <div class="card-content-padding oxh"
+                 v-md="detail.content"
+                 v-if="opened">
 
-          </div>
-        </f7-card-content>
-      </f7-card>
+            </div>
+          </f7-card-content>
+        </f7-card>
+      </keep-alive>
     </transition>
 
     <f7-skeleton-block v-if="loading"
@@ -110,6 +115,7 @@
     overflow-x: hidden;
   }
   .custom_card_header {
+    pointer-events: auto;
     margin-top: 8px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--f7-card-header-border-color);
@@ -173,6 +179,8 @@
   }
   .custom_card_footer {
     width: calc(100% - 40px);
+    padding: 4px 15px !important;
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -253,6 +261,11 @@
       },
       closeDetail (e) {
         this.opened = false
+      },
+      goToUserProfile (e) {
+        console.log('......', e)
+        e.preventDefault()
+        e.stopProperty()
       }
     },
     watch: {
@@ -275,8 +288,10 @@
         handler (val) {
           if (val) {
             document.title = this.detail.title || '文章详情'
+            this.$f7router.updateCurrentUrl('/article/' + this.detail.uuid.replace(/^([a-zA-Z0-9]*)\-.*/, '$1'))
           } else {
             document.title = '文章列表'
+            this.$f7router.updateCurrentUrl('/')
           }
         }
       },
