@@ -17,6 +17,10 @@ var routes = [
     component: PageArticleDetail
   },
   {
+    path: '/profile',
+    component: PageProfile
+  },
+  {
     path: '/profile/:userId',
     component: PageProfile
   }

@@ -133,7 +133,7 @@
       this.$nextTick(() => {
         setTimeout(() => {
           this.fabButtonShown = true
-        }, 800)
+        }, 2000)
       })
     },
     methods: {

@@ -6,14 +6,15 @@
             class=" color-purple">
       <f7-statusbar></f7-statusbar>
       <f7-panel left
-                reveal
-                class=" panel-reveal">
+                reveal>
         <f7-view>
           <f7-page>
             <!-- <f7-navbar title="Left Panel"></f7-navbar> -->
-            <f7-block>
+            <!-- <f7-block>
               <p>Here comes the left panel text</p>
-            </f7-block>
+            </f7-block> -->
+            <f7-view :main="false"
+                     url="/profile"></f7-view>
           </f7-page>
         </f7-view>
       </f7-panel>
@@ -106,8 +107,8 @@
     );
     background: radial-gradient(
       ellipse at right bottom,
-      rgba(10, 81, 15, 0.6) 0%,
-      rgba(10, 81, 15, 0.9) 50%,
+      rgba(10, 81, 15, 0.75) 0%,
+      rgba(10, 81, 15, 0.8) 50%,
       rgba(10, 81, 15, 1) 100%
     );
   }
