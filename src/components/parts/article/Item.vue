@@ -82,22 +82,25 @@
       </keep-alive>
     </transition>
 
-    <f7-skeleton-block v-if="loading"
-                       style="width: 100%; height: 100%;"></f7-skeleton-block>
+    <transition name="skeleton-transition"
+                enter-active-class="animated fadeIn faster"
+                leave-active-class="animated fadeOut">
+      <f7-skeleton-block v-if="loading"
+                         style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding: 15px; box-sizing: border-box; border-radius: 15px;">
+
+      </f7-skeleton-block>
+    </transition>
   </div>
 </template>
 <style scoped>
   .article_item {
+    position: relative;
     width: calc(100% - 40px);
     height: 213px;
     margin: 20px 20px;
     padding: 0;
     box-sizing: border-box;
     border-radius: 15px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
   }
   .top_img {
     width: 100%;
@@ -116,7 +119,7 @@
   }
   .custom_card_header {
     pointer-events: auto;
-    margin-top: 8px;
+    padding-top: 16px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--f7-card-header-border-color);
     display: flex;
@@ -149,6 +152,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    color: #333;
   }
   .publish_time {
     font-size: 12px;
@@ -170,6 +174,7 @@
     font-size: 16px;
     line-height: 48px;
     font-weight: bold;
+    color: #282828;
   }
   .custom_card_content_subtitle {
     width: 100%;
@@ -197,11 +202,11 @@
   }
 </style>
 <script>
-  import { f7SkeletonBlock, f7Card, f7CardContent, f7CardHeader, f7Link, f7Chip } from 'framework7-vue'
+  import { f7SkeletonBlock, f7SkeletonText, f7Card, f7CardContent, f7CardHeader, f7Link, f7Chip } from 'framework7-vue'
   export default {
     name: 'ArticleItem',
     components: {
-      f7SkeletonBlock, f7Card, f7CardContent, f7CardHeader, f7Link, f7Chip
+      f7SkeletonBlock, f7SkeletonText, f7Card, f7CardContent, f7CardHeader, f7Link, f7Chip
     },
     props: {
       index: {

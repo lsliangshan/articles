@@ -7,24 +7,16 @@
       <f7-statusbar></f7-statusbar>
       <f7-panel left
                 reveal>
-        <f7-view>
-          <f7-page>
-            <!-- <f7-navbar title="Left Panel"></f7-navbar> -->
-            <!-- <f7-block>
-              <p>Here comes the left panel text</p>
-            </f7-block> -->
+        <f7-view url="/profile"
+                 links-view=".view-main">
+          <!-- <f7-page>
             <f7-view :main="false"
                      url="/profile"></f7-view>
-          </f7-page>
+          </f7-page> -->
         </f7-view>
       </f7-panel>
       <f7-view :main="true"
-               url="/"
-               class="safe-areas"
-               :push-state="true"
-               push-state-separator=""
-               push-state-root=""
-               :master-detail-breakpoint="800"></f7-view>
+               url="/"></f7-view>
 
     </f7-app>
   </div>
@@ -70,9 +62,9 @@
           // panel: {
           //   swipe: 'both',
           // },
-          panels3d: {
-            enabled: true
-          }
+          // panels3d: {
+          //   enabled: true
+          // }
         }
       }
     }
@@ -80,14 +72,14 @@
 </script>
 
 <style>
-  body {
+  .body_bak {
     background: #074d55;
     background: -moz-radial-gradient(
       center,
       ellipse cover,
       #a7cfdf 0%,
       #23538a 100%
-    ); /* FF3.6+ */
+    );
     background: -webkit-gradient(
       radial,
       right bottom,
@@ -121,27 +113,5 @@
   }
   .card-content-padding img {
     max-width: 100%;
-  }
-
-  .panel .page,
-  .panel {
-    background: none;
-  }
-  .panel .list ul {
-    background: none;
-    border: none;
-  }
-  .panel .list .item-link {
-    color: #fff;
-  }
-  .panel .list .item-link.active-state {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  .panel .list .item-inner {
-    border-bottom-color: rgba(255, 255, 255, 0.2);
-  }
-  .panel .block,
-  .panel .block-title {
-    color: #fff;
   }
 </style>

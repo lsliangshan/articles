@@ -1,7 +1,6 @@
 <template>
   <f7-page name="home"
            class="home-page"
-           hide-bars-on-scroll
            infinite
            :infinite-distance="0"
            :infinite-preloader="showPreloader"
