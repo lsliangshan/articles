@@ -150,7 +150,6 @@
               pageSize: this.pageSize
             }
           }).then(responseData => {
-            console.log('list: ', responseData)
             if (responseData.status === 200 && responseData.data && responseData.data.list) {
               resolve(responseData.data)
             } else {

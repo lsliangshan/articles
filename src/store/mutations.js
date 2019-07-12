@@ -35,6 +35,9 @@
  */
 
 import * as types from './mutation-types'
+import { StorageUtil } from '../utils'
+
+const CryptoJS = require('crypto-js')
 
 export const mutations = {
   [types.SHOW_POPUP] (state, data) {
@@ -44,5 +47,10 @@ export const mutations = {
   },
   [types.CACHE_ALL_ARTICLE_TAGS] (state, data) {
     state.allArticleTags = data.tags
+  },
+  [types.CACHE_LOGIN_INFO] (state, data) {
+    let cryptoInfo = CryptoJS[state.cryptoType].encrypt(JSON.stringify(data.loginInfo), state.privateKey).toString()
+    StorageUtil.setItem(state.localStorageKeys.loginInfo, cryptoInfo)
+    state.loginInfo = JSON.parse(JSON.stringify(data.loginInfo || {}))
   }
 }

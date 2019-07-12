@@ -3,7 +3,7 @@
     <!-- <img src="./assets/logo.png">
     <router-view /> -->
     <f7-app :params="f7params"
-            class=" color-purple">
+            :class="classes">
       <f7-statusbar></f7-statusbar>
       <f7-panel left
                 reveal>
@@ -16,7 +16,9 @@
         </f7-view>
       </f7-panel>
       <f7-view :main="true"
-               url="/"></f7-view>
+               url="/"
+               :push-state="true"
+               push-state-separator=""></f7-view>
 
     </f7-app>
   </div>
@@ -25,6 +27,9 @@
 <script>
   import routes from './routers'
   import { f7App, f7Statusbar, f7Panel, f7Page, f7Views, f7View, f7Toolbar, f7Navbar, f7Tabs, f7Tab, f7Link, f7Block } from 'framework7-vue'
+  import * as types from './store/mutation-types'
+  import { StorageUtil } from './utils'
+  const CryptoJS = require('crypto-js')
   export default {
     name: 'App',
     components: {
@@ -56,6 +61,7 @@
         ],
         f7params: {
           routes,
+          fastClicks: true,
           theme: 'ios',
           name: 'Articles',
           id: 'com.dei2.articles',
@@ -65,6 +71,46 @@
           // panels3d: {
           //   enabled: true
           // }
+        }
+      }
+    },
+    computed: {
+      store () {
+        return this.$store
+      },
+      localStorageKeys () {
+        return this.store.state.localStorageKeys
+      },
+      themeColors () {
+        return this.store.state.themeColors
+      },
+      classes () {
+        let date = (new Date()).getDate()
+        let index = date % (this.themeColors.length + 1)
+        return [
+          {
+            ['color-primary']: index === 13,
+            [`color-${this.themeColors[index].name}`]: index !== 13
+          }
+        ]
+      }
+    },
+    created () {
+      let localLoginInfo = StorageUtil.getItem(this.localStorageKeys.loginInfo)
+      if (localLoginInfo) {
+        let decodedLoginInfo
+        try {
+          decodedLoginInfo = CryptoJS[this.store.state.cryptoType].decrypt(localLoginInfo, this.store.state.privateKey).toString(CryptoJS.enc.Utf8)
+        } catch (err) { }
+        if (decodedLoginInfo) {
+          this.store.commit(types.CACHE_LOGIN_INFO, {
+            loginInfo: JSON.parse(decodedLoginInfo)
+          })
+        } else {
+          StorageUtil.clear()
+          this.store.commit(types.CACHE_LOGIN_INFO, {
+            loginInfo: {}
+          })
         }
       }
     }

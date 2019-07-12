@@ -28,6 +28,7 @@
 </style>
 <script>
   import { f7Page, f7LoginScreenTitle, f7List, f7ListInput, f7ListButton, f7BlockFooter } from 'framework7-vue'
+  import * as types from '../../store/mutation-types'
   export default {
     name: 'Login',
     components: {
@@ -39,9 +40,79 @@
         password: ''
       }
     },
+    computed: {
+      store () {
+        return this.$store
+      },
+      requestInfo () {
+        return this.store.state.requestInfo
+      }
+    },
     methods: {
-      signIn () {
-        this.$f7.dialog.alert(`Username: ${this.username}<br>Password: ${this.password}`)
+      doLogin () {
+        return new Promise(async (resolve, reject) => {
+          await this.store.dispatch(types.AJAX, {
+            url: this.requestInfo.login,
+            data: {
+              username: this.username,
+              password: this.password
+            }
+          }).then(responseData => {
+            console.log('登录：', responseData)
+            if (responseData.status === 200 && responseData.data) {
+              resolve(responseData.data)
+            } else {
+              this.$f7.toast.create({
+                text: responseData.message || '操作失败，请稍后再试',
+                position: 'top',
+                closeTimeout: 3000
+              }).open()
+              resolve(null)
+            }
+          }).catch(err => {
+            this.$f7.toast.create({
+              text: (err.message.indexOf('timeout') > -1 ? '服务器响应超时，请稍后再试' : err.message),
+              position: 'top',
+              closeTimeout: 3000
+            }).open()
+            resolve(null)
+          })
+        })
+      },
+      async signIn () {
+        if (!this.username) {
+          this.$f7.toast.create({
+            text: '用户名不能为空',
+            position: 'top',
+            closeTimeout: 3000
+          }).open()
+        } else if (!this.password) {
+          this.$f7.toast.create({
+            text: '密码不能为空',
+            position: 'top',
+            closeTimeout: 3000
+          }).open()
+        } else {
+          this.doLogin().then(responseData => {
+            if (responseData) {
+              // 登录成功
+              this.$f7.toast.create({
+                text: '登录成功',
+                position: 'top',
+                closeTimeout: 3000
+              }).open()
+              this.store.commit(types.CACHE_LOGIN_INFO, {
+                loginInfo: responseData
+              })
+              setTimeout(() => {
+                this.$f7router.back()
+              }, 800)
+            } else {
+              // 登录失败
+            }
+          })
+        }
+        // this.$f7.dialog.alert(`Username: ${this.username}<br>Password: ${this.password}`)
       }
     }
   }
