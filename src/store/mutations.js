@@ -49,8 +49,21 @@ export const mutations = {
     state.allArticleTags = data.tags
   },
   [types.CACHE_LOGIN_INFO] (state, data) {
-    let cryptoInfo = CryptoJS[state.cryptoType].encrypt(JSON.stringify(data.loginInfo), state.privateKey).toString()
-    StorageUtil.setItem(state.localStorageKeys.loginInfo, cryptoInfo)
+    let localStr = ''
+    if (data.hasOwnProperty('localStr')) {
+      localStr = data.localStr
+    } else {
+      localStr = CryptoJS[state.cryptoType].encrypt(JSON.stringify(data.loginInfo), state.privateKey).toString()
+    }
+    StorageUtil.setItem(state.localStorageKeys.loginInfo, localStr)
     state.loginInfo = JSON.parse(JSON.stringify(data.loginInfo || {}))
+  },
+  [types.INIT_LOGIN_INFO] (state, data) {
+    if (data.loginInfo) {
+      state.loginInfo = JSON.parse(JSON.stringify(data.loginInfo))
+    }
+  },
+  [types.CACHE_ACTIVE_THEME_COLOR] (state, data) {
+    state.activeThemeColor = data.activeThemeColor
   }
 }

@@ -39,10 +39,14 @@ export const SHOW_POPUP = 'SHOW_POPUP'
 
 export const CACHE_ALL_ARTICLE_TAGS = 'CACHE_ALL_ARTICLE_TAGS'
 
+export const CACHE_ACTIVE_THEME_COLOR = 'CACHE_ACTIVE_THEME_COLOR'
+
+export const CACHE_LOGIN_INFO = 'CACHE_LOGIN_INFO'
+
+export const INIT_LOGIN_INFO = 'INIT_LOGIN_INFO'
+
 // actions
 
 export const AJAX = 'AJAX'
 
 export const AJAX_WITH_USER = 'AJAX_WITH_USER'
-
-export const CACHE_LOGIN_INFO = 'CACHE_LOGIN_INFO'

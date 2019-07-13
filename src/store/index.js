@@ -104,6 +104,7 @@ const store = new Vuex.Store({
         value: '#000000'
       }
     ],
+    activeThemeColor: 'primary',
     assets: {
       maleAvatar: '/static/images/avatar_male_1.jpg',
       femaleAvatar: '/static/images/avatar_female_1.jpg',
@@ -116,7 +117,7 @@ const store = new Vuex.Store({
       }
     },
     requestInfo: {
-      // baseUrl: PROTOCOL + '//127.0.0.1:3000',
+      // baseUrl: 'http://127.0.0.1:3000',
       baseUrl: 'https://talkapi.dei2.com',
       login: '/Zpm/user/login',
       register: '/Zpm/user/register',

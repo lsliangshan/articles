@@ -20,9 +20,9 @@ import * as filters from './filters'
 
 import './assets/css/animate.css/animate.min.css'
 
-import Framework73dPanels from 'framework7-plugin-3d-panels/dist/framework7.3dpanels'
-import 'framework7-plugin-3d-panels/dist/framework7.3dpanels.min.css'
-Framework7.use(Framework73dPanels)
+// import Framework73dPanels from 'framework7-plugin-3d-panels/dist/framework7.3dpanels'
+// import 'framework7-plugin-3d-panels/dist/framework7.3dpanels.min.css'
+// Framework7.use(Framework73dPanels)
 Framework7.use(Framework7Vue)
 
 require('./directives/index')
