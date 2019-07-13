@@ -13,7 +13,6 @@
              :class="classes"
              style="position: relative; min-height: 200px; display: flex; flex-direction: row; align-items: flex-end;">
           <img class="top_img"
-               style="position: absolute"
                :src="detail.album || topImage">
           <f7-card-header text-color="black"
                           class="display-block"
