@@ -39,6 +39,21 @@ import { StorageUtil } from '../utils'
 
 const CryptoJS = require('crypto-js')
 
+const formatTags = function (tags) {
+  let outTags = []
+
+  outTags = tags.filter(item => Number(item.parent) === 0)
+
+  for (let i = 0; i < outTags.length; i++) {
+    if (!outTags[i].children) {
+      outTags[i].children = []
+    }
+    outTags[i].children = tags.filter(item => String(item.parent) === String(outTags[i].value))
+  }
+
+  return outTags
+}
+
 export const mutations = {
   [types.SHOW_POPUP] (state, data) {
     state.popup = Object.assign({}, state.popup, data, {
@@ -47,6 +62,7 @@ export const mutations = {
   },
   [types.CACHE_ALL_ARTICLE_TAGS] (state, data) {
     state.allArticleTags = data.tags
+    state.formatArticleTags = formatTags(data.tags)
   },
   [types.CACHE_LOGIN_INFO] (state, data) {
     let localStr = ''

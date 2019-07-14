@@ -22,7 +22,6 @@
             <small :style="{opacity: 0.7}">{{detail.zpm_user ? (detail.zpm_user.nickname || detail.zpm_user.username) : '无名'}}</small>
           </f7-card-header>
           <f7-link card-close
-                   color="gray"
                    class="card-opened-fade-in"
                    :style="{position: 'absolute', right: '15px', top: '15px'}"
                    icon-f7="close_round_fill"></f7-link>
@@ -53,7 +52,12 @@
 }
 .display-block {
   position: absolute;
-  text-shadow: 0 0 5px white;
+  text-shadow: 0 0 5px black;
+  color: white !important;
+}
+.card-opened-fade-in {
+  text-shadow: 0 0 5px black;
+  color: white;
 }
 </style>
 

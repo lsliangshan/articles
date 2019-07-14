@@ -117,22 +117,23 @@ const store = new Vuex.Store({
       }
     },
     requestInfo: {
-      // baseUrl: 'http://127.0.0.1:3000',
-      baseUrl: 'https://talkapi.dei2.com',
+      baseUrl: 'http://127.0.0.1:3000',
+      // baseUrl: 'https://talkapi.dei2.com',
       login: '/Zpm/user/login',
       register: '/Zpm/user/register',
       articles: {
         list: '/Zpm/article/getAll',
         detail: '/Zpm/article/content',
         getAllTags: '/Zpm/tag/getAll',
-        getAllUsers: ''
+        search: '/Zpm/article/search'
       }
     },
     loginInfo: {
     },
     privateKey: 'com.dei2.articles',
     cryptoType: 'TripleDES',
-    allArticleTags: []
+    allArticleTags: [],
+    formatArticleTags: []
   }
 })
 

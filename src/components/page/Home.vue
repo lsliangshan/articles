@@ -20,25 +20,31 @@
       </f7-nav-left> -->
       <f7-nav-title>INIG</f7-nav-title>
       <!-- <f7-nav-title-large>INIG - 智愚</f7-nav-title-large> -->
-      <f7-nav-right>
+      <!-- @searchbar:enable="searchEnable"
+                      @searchbar:disable="searchDisable" -->
+      <!-- <f7-nav-right>
         <f7-link class="searchbar-enable"
                  data-searchbar=".searchbar-components"
                  icon-ios="f7:search"
                  icon-aurora="f7:search"
                  icon-md="f7:search"></f7-link>
-      </f7-nav-right>
-      <f7-searchbar class="searchbar-components"
-                    ref="searchBarRef"
-                    custom-search
-                    disable-button-text="取消"
-                    placeholder="请输入文章"
-                    expandable
-                    :disable-button="!$theme.aurora"
-                    @searchbar:search="doSearch"
-                    @searchbar:enable="searchEnable"
-                    @searchbar:disable="searchDisable"></f7-searchbar>
+      </f7-nav-right> -->
+      <f7-subnavbar :inner="false">
+        <f7-searchbar class="searchbar-components"
+                      ref="searchBarRef"
+                      disable-button-text="取消"
+                      placeholder="请输入文章"
+                      :value="kw"
+                      custom-search
+                      :backdrop="!!kw.match(/^[#@]/)"
+                      :disable-button="!$theme.aurora"
+                      @click:clear="searchClear"
+                      @searchbar:search="search"></f7-searchbar>
+      </f7-subnavbar>
     </f7-navbar>
-    <search-list :kw="kw"></search-list>
+    <search-list :kw="kw"
+                 :is-searching="isSearching"
+                 @change="changeKw"></search-list>
     <f7-row no-gap>
       <f7-col v-for="(item, index) in articles"
               :key="index"
@@ -80,7 +86,7 @@
 }
 </style>
 <script>
-import { f7Page, f7Fab, f7Navbar, f7NavRight, f7Link, f7Searchbar, f7Row, f7Col } from 'framework7-vue'
+import { f7Page, f7Fab, f7Navbar, f7Subnavbar, f7NavRight, f7Link, f7Searchbar, f7Row, f7Col } from 'framework7-vue'
 import ArticleItem from '../parts/article/Item.vue'
 import SearchList from '../parts/search/List.vue'
 import * as types from '../../store/mutation-types'
@@ -89,19 +95,22 @@ export default {
   components: {
     ArticleItem,
     SearchList,
-    f7Page, f7Fab, f7Navbar, f7NavRight, f7Link, f7Searchbar, f7Row, f7Col
+    f7Page, f7Fab, f7Navbar, f7Subnavbar, f7NavRight, f7Link, f7Searchbar, f7Row, f7Col
   },
   data () {
     return {
       allowInfinite: true,
       showPreloader: true,
       pageIndex: 1,
-      pageSize: 20,
+      pageSize: 3,
       articles: [],
       defaultArticleDetail: null,
       isOpen: false,
       isSearching: false,
       kw: '',
+      cachedKw: '',
+      searchType: '',
+      searchValue: '',
       fabButtonShown: false
     }
   },
@@ -121,13 +130,10 @@ export default {
     // })
 
     this.loadMore()
-    // this.$nextTick(() => {
-    //   console.log('>>>>>>>>>', this.$refs.searchBarRef)
-    //   this.$refs.searchBarRef.$el.setAttribute('action', 'javascript:return true')
-    // })
-    // this.$refs.searchBarRef.$el.addEventListener('submit', () => {
-    //   alert('submit')
-    // })
+    this.$nextTick(() => {
+      this.$refs.searchBarRef.$el.setAttribute('action', 'javascript:return true')
+    })
+    this.$refs.searchBarRef.$el.addEventListener('submit', this.submit, false)
     this.getAllArticleTags()
 
     this.$nextTick(() => {
@@ -139,17 +145,26 @@ export default {
   methods: {
     scrollToTop () {
       setTimeout(() => {
-        this.$$('.page-content').scrollTop(53, 300)
-      }, 2000)
+        this.$$('.page-content').scrollTop(0, 300)
+      }, 300)
     },
-    getArticles () {
+    searchArticles () {
       return new Promise(async (resolve, reject) => {
+        let data = {
+          pageIndex: this.pageIndex,
+          pageSize: this.pageSize,
+          searchType: this.searchType,
+          searchValue: this.searchValue
+        }
+        if (this.searchType) {
+          data.searchType = this.searchType
+        }
+        if (this.searchValue) {
+          data.searchValue = this.searchValue
+        }
         await this.store.dispatch(types.AJAX, {
-          url: this.requestInfo.articles.list,
-          data: {
-            pageIndex: this.pageIndex,
-            pageSize: this.pageSize
-          }
+          url: this.requestInfo.articles.search,
+          data: data
         }).then(responseData => {
           if (responseData.status === 200 && responseData.data && responseData.data.list) {
             resolve(responseData.data)
@@ -193,28 +208,7 @@ export default {
       if (this.allowInfinite) {
         this.allowInfinite = false
 
-        let responseData = await this.getArticles()
-        if (responseData) {
-          if (this.pageIndex === 1) {
-            this.articles = responseData.list
-          } else {
-            this.articles = this.articles.concat(responseData.list)
-            this.$f7.toast.create({
-              text: responseData.list.length > 0 ? `为您推荐${responseData.list.length}条文章` : '暂无新文章推荐',
-              position: 'top',
-              closeTimeout: 3000
-            }).open()
-          }
-          if (this.pageIndex < responseData.total) {
-            this.pageIndex += 1
-            this.allowInfinite = true
-          } else {
-            this.allowInfinite = false
-            this.showPreloader = false
-          }
-        } else {
-          this.allowInfinite = true
-        }
+        await this.doSearch()
       } else {
         this.showPreloader = false
       }
@@ -246,17 +240,73 @@ export default {
     searchChanged (e) {
       this.kw = e.target.value
     },
-    disableChange (e) {
+    async searchClear (e) {
+      this.scrollToTop()
       this.kw = ''
+      this.pageIndex = 1
+      this.searchType = ''
+      this.searchValue = ''
+      await this.doSearch()
+      this.isSearching = false
     },
-    doSearch (searchbar, query) {
+    search (searchbar, query) {
       this.kw = query
+      this.isSearching = true
     },
     searchEnable () {
       this.isSearching = true
+      this.kw = ''
     },
-    searchDisable () {
+    async searchDisable (e) {
       this.isSearching = false
+      this.kw = ''
+    },
+    doSearch () {
+      return new Promise(async (resolve) => {
+        let responseData = await this.searchArticles()
+        if (responseData) {
+          if (this.pageIndex === 1) {
+            this.articles = responseData.list
+          } else {
+            this.articles = this.articles.concat(responseData.list)
+            this.$f7.toast.create({
+              text: responseData.list.length > 0 ? `为您推荐${responseData.list.length}条文章` : '暂无新文章推荐',
+              position: 'top',
+              closeTimeout: 3000
+            }).open()
+          }
+          if (this.pageIndex < responseData.total) {
+            this.pageIndex += 1
+            this.allowInfinite = true
+          } else {
+            this.allowInfinite = false
+            this.showPreloader = false
+          }
+        } else {
+          this.allowInfinite = true
+        }
+        resolve(true)
+      })
+    },
+    async changeKw (data) {
+      this.scrollToTop()
+      this.pageIndex = 1
+      this.searchType = data.searchType
+      this.searchValue = data.searchValue
+      await this.doSearch()
+      // this.$f7.searchbar.disable()
+      this.kw = data.text
+      this.isSearching = false
+    },
+    async submit () {
+      if (!this.kw.match(/^[#@]/)) {
+        this.scrollToTop()
+        this.pageIndex = 1
+        this.searchType = 'title'
+        this.searchValue = this.kw
+        await this.doSearch()
+        this.isSearching = false
+      }
     }
   }
 }
