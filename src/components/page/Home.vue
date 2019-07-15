@@ -137,7 +137,6 @@ export default {
   async mounted () {
     // this.$f7ready((f7) => {
     // })
-
     this.loadMore()
     this.$nextTick(() => {
       this.$refs.searchBarRef.$el.setAttribute('action', 'javascript:return true')
