@@ -81,5 +81,17 @@ export const mutations = {
   },
   [types.CACHE_ACTIVE_THEME_COLOR] (state, data) {
     state.activeThemeColor = data.activeThemeColor
+  },
+  [types.SET_ACTIVE_THEME_COLOR] (state, data) {
+    state.settings.activeThemeColor = data.activeThemeColor
+    StorageUtil.setItem(state.localStorageKeys.settings, state.settings)
+  },
+  [types.SET_THEME_DARK] (state, data) {
+    state.settings.themeDark = data.themeDark
+    StorageUtil.setItem(state.localStorageKeys.settings, state.settings)
+  },
+  [types.INIT_SETTINGS] (state, data) {
+    state.settings = JSON.parse(JSON.stringify(data.settings))
+    StorageUtil.setItem(state.localStorageKeys.settings, state.settings)
   }
 }

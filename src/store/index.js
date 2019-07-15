@@ -47,7 +47,8 @@ const store = new Vuex.Store({
   getters: getters.getters,
   state: {
     localStorageKeys: {
-      loginInfo: 'local-login-info'
+      loginInfo: 'local-login-info',
+      settings: 'local-user-settings'
     },
     eventHub: new Vue(),
     themeColors: [
@@ -105,6 +106,10 @@ const store = new Vuex.Store({
       }
     ],
     activeThemeColor: 'primary',
+    settings: {
+      activeThemeColor: 'primary',
+      themeDark: false
+    },
     assets: {
       maleAvatar: '/static/images/avatar_male_1.jpg',
       femaleAvatar: '/static/images/avatar_female_1.jpg',
@@ -117,8 +122,8 @@ const store = new Vuex.Store({
       }
     },
     requestInfo: {
-      // baseUrl: 'http://127.0.0.1:3000',
-      baseUrl: 'https://talkapi.dei2.com',
+      baseUrl: 'http://127.0.0.1:3000',
+      // baseUrl: 'https://talkapi.dei2.com',
       login: '/Zpm/user/login',
       register: '/Zpm/user/register',
       articles: {

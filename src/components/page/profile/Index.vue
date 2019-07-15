@@ -62,11 +62,26 @@
             </f7-list-item>
           </f7-list>
         </transition>
-        <f7-list class="custom_list">
+        <f7-list class="custom_list"
+                 no-hairlines>
+          <f7-list-item title="夜间模式">
+            <f7-icon slot="media"
+                     f7="timer_fill"></f7-icon>
+            <f7-toggle :checked="themeDark"
+                       :color="activeThemeColor"
+                       @toggle:change="toggleThemeDark"></f7-toggle>
+          </f7-list-item>
           <f7-list-item link="#"
-                        title="设置">
+                        title="主题颜色"
+                        popover-open=".popover-theme-color">
             <f7-icon slot="media"
                      f7="settings_fill"></f7-icon>
+            <f7-link slot="after"
+                     title="主题颜色"
+                     href="#">
+              <div class="active_theme_color"
+                   :class="'bg-color-' + activeThemeColor"></div>
+            </f7-link>
           </f7-list-item>
         </f7-list>
 
@@ -91,6 +106,7 @@
                        text="登录"
                        v-if="!loginInfo.phonenum"
                        class="absolute custom_btn"
+                       :color="activeThemeColor"
                        panel-close="left"
                        href="/login"
                        view=".view-main"></f7-button>
@@ -101,9 +117,30 @@
       </div>
     </div>
     <!-- </f7-block> -->
+
+    <f7-popover class="popover-theme-color">
+      <div class="colors_container">
+        <div class="color_item"
+             v-for="(item, index) in themeColors"
+             :key="index"
+             :class="'bg-color-' + item.name"
+             @click="setActiveThemeColor(item.name)">
+          <div class="color_item_status"
+               v-if="activeThemeColor === item.name">
+            <f7-icon ios="f7:check"
+                     aurora="f7:check"
+                     md="md:check"
+                     color="white"></f7-icon>
+          </div>
+        </div>
+      </div>
+    </f7-popover>
   </f7-page>
 </template>
 <style scoped>
+.fs14 {
+  font-size: 14px;
+}
 .relative {
   position: relative;
 }
@@ -197,14 +234,42 @@
 .custom_btn {
   width: calc(100% - 2 * var(--f7-block-padding-horizontal));
 }
+
+.active_theme_color {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #c8c8c8;
+}
+.colors_container {
+  width: 260px;
+  height: 260px;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.color_item {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  border: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 <script>
-import { f7Page, f7Block, f7Link, f7List, f7ListItem, f7Button, f7Icon } from 'framework7-vue'
+import { f7Page, f7Block, f7Link, f7List, f7ListItem, f7Button, f7Icon, f7Popover } from 'framework7-vue'
 import * as types from '../../../store/mutation-types'
 export default {
   name: 'Profile',
   components: {
-    f7Page, f7Block, f7Link, f7List, f7ListItem, f7Button, f7Icon
+    f7Page, f7Block, f7Link, f7List, f7ListItem, f7Button, f7Icon, f7Popover
   },
   props: {},
   data () {
@@ -220,13 +285,29 @@ export default {
       return this.store.state.loginInfo
     },
     activeThemeColor () {
-      return this.store.state.activeThemeColor
+      return this.store.state.settings.activeThemeColor
+    },
+    themeColors () {
+      return this.store.state.themeColors
+    },
+    themeDark () {
+      return this.store.state.settings.themeDark
     }
   },
   methods: {
     logout () {
       this.store.commit(types.CACHE_LOGIN_INFO, {
         loginInfo: {}
+      })
+    },
+    setActiveThemeColor (color) {
+      this.store.commit(types.SET_ACTIVE_THEME_COLOR, {
+        activeThemeColor: color
+      })
+    },
+    toggleThemeDark (e) {
+      this.store.commit(types.SET_THEME_DARK, {
+        themeDark: e
       })
     }
   },
