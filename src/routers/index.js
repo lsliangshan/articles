@@ -10,7 +10,7 @@ var routes = [
     component: PageHome
   },
   {
-    path: '/about/',
+    path: '/about',
     component: PageAbout
   },
   {

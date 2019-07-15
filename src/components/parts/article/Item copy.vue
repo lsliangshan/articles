@@ -6,14 +6,39 @@
                 enter-active-class="animated fadeIn"
                 leave-active-class="animated fadeOut faster">
       <keep-alive>
-        <f7-card no-shadow
+        <f7-card expandable
+                 no-shadow
                  v-if="!loading"
-                 @click="console.log('sfsdf')"
+                 :padding="false"
+                 :expandable-opened="isOpen"
+                 @card:open="openDetail"
+                 @card:close="closeDetail"
                  ref="cardRef"
-                 style="width: 100%; height: 100%; margin: 0; border-radius: 10px; overflow: hidden;">
+                 style="width: 100%; height: 100%; margin: 0;">
           <f7-card-content :padding="false">
             <div class="bg-color-white"
-                 :class="classes">
+                 :class="classes"
+                 style="position: relative; min-height: 200px; display: flex; flex-direction: row; align-items: flex-end;"
+                 v-if="opened">
+              <img class="top_img"
+                   :src="detail.album || topImage"
+                   v-if="opened">
+              <f7-card-header text-color="black"
+                              class="display-block"
+                              :style="{paddingTop: opened ? '58px' : '20px'}">
+                <span class="card_title"
+                      :style="{width: opened ? '100%' : 'calc(100% - 40px)'}">{{detail.title}}</span>
+                <small :style="{opacity: 0.7}">{{detail.zpm_user ? (detail.zpm_user.nickname || detail.zpm_user.username) : '无名'}}</small>
+              </f7-card-header>
+              <f7-link card-close
+                       class="card-opened-fade-in"
+                       :style="{position: 'absolute', right: '15px', top: '15px'}"
+                       icon-f7="close_round_fill"></f7-link>
+            </div>
+            <div class="bg-color-white"
+                 :class="classes"
+                 :style="{height: imageHeight + 'px'}"
+                 v-else>
               <f7-card-header text-color="black"
                               class="custom_card_header"
                               style="width: 100%;"
@@ -28,21 +53,11 @@
                   <div class="publish_time">{{detail.postTime | dateFormat}}</div>
                 </div>
               </f7-card-header>
-              <!-- <div class="custom_card_content">
+              <div class="custom_card_content">
                 <div class="custom_card_content_title">{{detail.title}}</div>
                 <div class="custom_card_content_subtitle"
                      v-md:40="detail.content"></div>
-              </div> -->
-              <f7-link href="/article/db415f70"
-                       view=".view-main">
-                <!-- <f7-link :href="false"
-                       @click="goToArticle(detail.uuid.substring(0, detail.uuid.indexOf('-')))"> -->
-                <div class="custom_card_content">
-                  <div class="custom_card_content_title">{{detail.title}}</div>
-                  <div class="custom_card_content_subtitle"
-                       v-md:40="detail.content"></div>
-                </div>
-              </f7-link>
+              </div>
               <f7-card-footer class="no-border custom_card_footer">
                 <div class="tag_container">
                   <f7-chip v-for="(tag, index) in detail.tag.split(';')"
@@ -55,6 +70,11 @@
                 <f7-link style="font-size: 13px;">查看全文</f7-link>
               </f7-card-footer>
             </div>
+            <div class="card-content-padding oxh"
+                 v-md="detail.content"
+                 v-if="opened">
+
+            </div>
           </f7-card-content>
         </f7-card>
       </keep-alive>
@@ -64,7 +84,8 @@
                 enter-active-class="animated fadeIn faster"
                 leave-active-class="animated fadeOut">
       <f7-skeleton-block v-if="loading"
-                         style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box; border-radius: 10px; overflow: hidden;">
+                         style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; padding: 15px; box-sizing: border-box; border-radius: 15px;">
+
       </f7-skeleton-block>
     </transition>
   </div>
@@ -189,9 +210,6 @@
     text-shadow: 0 0 5px black;
     color: white;
   }
-  .skeleton-block {
-    border-radius: 10px !important;
-  }
 </style>
 <script>
   import { f7SkeletonBlock, f7SkeletonText, f7Card, f7CardContent, f7CardHeader, f7Link, f7Chip } from 'framework7-vue'
@@ -263,9 +281,6 @@
       goToUserProfile (e) {
         e.preventDefault()
         e.stopProperty()
-      },
-      goToArticle (uuid) {
-        this.$f7router.navigate('/article/' + uuid)
       }
     },
     watch: {
