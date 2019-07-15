@@ -108,7 +108,7 @@ export default {
       allowInfinite: true,
       showPreloader: true,
       pageIndex: 1,
-      pageSize: 3,
+      pageSize: 20,
       articles: [],
       defaultArticleDetail: null,
       isOpen: false,
